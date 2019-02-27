@@ -38,8 +38,7 @@
     "@angular/common": ">= 2.0.0 || >= 6.0.0",
     "@angular/core": ">= 2.0.0 || >= 6.0.0",
     "@angular/router": ">=3.0.0 || >= 6.0.0",
-    "jquery": ">= 2.0.0",
-    "signalr": ">= 2.2.1"
+    "@aspnet/signalr": "^1.1.0"
   },
   "devDependencies": {
     "@angular/animations": "6.0.0",

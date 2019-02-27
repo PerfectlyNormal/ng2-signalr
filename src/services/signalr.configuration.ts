@@ -2,6 +2,7 @@
 import { ConnectionTransports } from './connection/connection.transports';
 import { ConnectionTransport } from './connection/connection.transport';
 import { IConnectionOptions } from './connection/connection.options';
+import { LogLevel } from '@aspnet/signalr';
 
 export class SignalRConfiguration implements IConnectionOptions {
 
@@ -14,8 +15,8 @@ export class SignalRConfiguration implements IConnectionOptions {
     /** name of the SignalR service hub to connect to */
     public hubName: string;
 
-    /** disable/enables client side logging. Defaults to false */
-    public logging: boolean;
+    /** Level of details for logging. Defaults to Error */
+    public logging: LogLevel;
 
     /** Allows jsonp. This flag can be used to suppport CORS on older browsers */
     public jsonp: boolean;
@@ -40,7 +41,7 @@ export class SignalRConfiguration implements IConnectionOptions {
 
     constructor() {
        this.hubName = null;
-       this.logging = false;
+       this.logging = LogLevel.Error;
        this.qs  = null;
        this.url = null;
        this.jsonp = false;

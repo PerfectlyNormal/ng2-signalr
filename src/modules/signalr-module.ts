@@ -1,31 +1,12 @@
 import { NgModule, ModuleWithProviders, NgZone, InjectionToken } from '@angular/core';
+import { HubConnectionBuilder } from '@aspnet/signalr';
 import { SignalR } from '../services/signalr';
 import { SignalRConfiguration } from '../services/signalr.configuration';
 
 const SIGNALR_CONFIGURATION = new InjectionToken<SignalRConfiguration>('SIGNALR_CONFIGURATION');
 
 export function createSignalr(configuration: SignalRConfiguration, zone: NgZone) {
-
-    const jConnectionFn = getJConnectionFn();
-
-    return new SignalR(configuration, zone, jConnectionFn);
-}
-
-function getJConnectionFn(): any {
-    const jQuery = getJquery();
-    const hubConnectionFn = (window as any).jQuery.hubConnection;
-    if (hubConnectionFn == null) {
-        throw new Error('Signalr failed to initialize. Script \'jquery.signalR.js\' is missing. Please make sure to include \'jquery.signalR.js\' script.');
-    }
-    return hubConnectionFn;
-}
-
-function getJquery(): any {
-    const jQuery = (window as any).jQuery;
-    if (jQuery == null) {
-        throw new Error('Signalr failed to initialize. Script \'jquery.js\' is missing. Please make sure to include jquery script.');
-    }
-    return jQuery;
+    return new SignalR(configuration, zone);
 }
 
 @NgModule({

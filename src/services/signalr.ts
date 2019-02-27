@@ -1,29 +1,22 @@
+import { NgZone, Injectable } from '@angular/core';
+import { HubConnectionBuilder } from '@aspnet/signalr';
+
 import { ISignalRConnection } from './connection/i.signalr.connection';
 import { SignalRConfiguration } from './signalr.configuration';
 import { SignalRConnection } from './connection/signalr.connection';
-import { NgZone, Injectable, Inject } from '@angular/core';
 import { IConnectionOptions } from './connection/connection.options';
-import { ConnectionTransport } from './connection/connection.transport';
-import { Observable } from 'rxjs';
-import { ConnectionStatus } from './connection/connection.status';
-import { SIGNALR_JCONNECTION_TOKEN } from "./signalr.module";
-
-declare var jQuery: any;
 
 @Injectable()
 export class SignalR {
     private _configuration: SignalRConfiguration;
     private _zone: NgZone;
-    private _jHubConnectionFn: any;
 
     public constructor(
         configuration: SignalRConfiguration,
-        zone: NgZone,
-        @Inject(SIGNALR_JCONNECTION_TOKEN) jHubConnectionFn: any /* use type 'any'; Suggested workaround from angular repository: https://github.com/angular/angular/issues/12631 */
+        zone: NgZone
     ) {
         this._configuration = configuration;
         this._zone = zone;
-        this._jHubConnectionFn = jHubConnectionFn;
     }
 
     public createConnection(options?: IConnectionOptions): SignalRConnection {
@@ -32,18 +25,16 @@ export class SignalR {
         this.logConfiguration(configuration);
 
         // create connection object
-        const jConnection = this._jHubConnectionFn(configuration.url);
-        jConnection.logging = configuration.logging;
-        jConnection.qs = configuration.qs;
+        const jConnection = new HubConnectionBuilder()
+            .withUrl(configuration.url)
+            .configureLogging(configuration.logging)
+            .build();
+        // FIXME: jConnection.qs = configuration.qs;
 
-        // create a proxy
-        const jProxy = jConnection.createHubProxy(configuration.hubName);
         // !!! important. We need to register at least one function otherwise server callbacks will not work.
-        jProxy.on('noOp', () => { /* */ });
+        jConnection.on('noOp', () => { /* */ });
 
-        const hubConnection = new SignalRConnection(jConnection, jProxy, this._zone, configuration);
-
-        return hubConnection;
+        return new SignalRConnection(jConnection, this._zone, configuration);
     }
 
     public connect(options?: IConnectionOptions): Promise<ISignalRConnection> {
