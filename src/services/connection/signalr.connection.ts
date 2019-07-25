@@ -181,9 +181,9 @@ export class SignalRConnection implements ISignalRConnection {
             this.run(() => {
                 let connectionStatus: ConnectionStatus = null;
 
-                if (change.hasOwnProperty('newState'))
+                if (change && change.hasOwnProperty('newState'))
                     connectionStatus = new ConnectionStatus(change.newState);
-                else if (change.hasOwnProperty('message')) // Probably an error
+                else if (!change || change.hasOwnProperty('message')) // Probably an error
                     connectionStatus = ConnectionStatuses.disconnected;
 
                 sStatus.next(connectionStatus);
