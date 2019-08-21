@@ -1,5 +1,4 @@
 import { NgModule, ModuleWithProviders, NgZone, InjectionToken } from '@angular/core';
-import { HubConnectionBuilder } from '@aspnet/signalr';
 import { SignalR } from '../services/signalr';
 import { SignalRConfiguration } from '../services/signalr.configuration';
 

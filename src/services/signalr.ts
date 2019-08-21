@@ -26,7 +26,7 @@ export class SignalR {
 
         // create connection object
         const jConnection = new HubConnectionBuilder()
-            .withUrl(configuration.url)
+            .withUrl(configuration.url, configuration.httpConnectionOptions)
             .configureLogging(configuration.logging)
             .build();
         // FIXME: jConnection.qs = configuration.qs;
@@ -59,6 +59,7 @@ export class SignalR {
         const merged: SignalRConfiguration = new SignalRConfiguration();
         merged.hubName = overrides.hubName || this._configuration.hubName;
         merged.url = overrides.url || this._configuration.url;
+        merged.httpConnectionOptions = overrides.httpConnectionOptions || this._configuration.httpConnectionOptions;
         merged.qs = overrides.qs || this._configuration.qs;
         merged.logging = this._configuration.logging;
         merged.jsonp = overrides.jsonp || this._configuration.jsonp;
